@@ -2,7 +2,7 @@
   "name": "sonarqube",
   "version": "1.0.0",
   "description": "Sonarqube Github Action",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -15,5 +15,12 @@
   "bugs": {
     "url": "https://github.com/experfy/sonarqube/issues"
   },
-  "homepage": "https://github.com/experfy/sonarqube#readme"
+  "homepage": "https://github.com/experfy/sonarqube#readme",
+  "devDependencies": {},
+  "dependencies": {
+    "@actions/core": "^1.2.6",
+    "@actions/exec": "^1.0.4",
+    "@actions/github": "^4.0.0",
+    "axios": "^0.21.1"
+  }
 }
