@@ -3,6 +3,8 @@ const { context, getOctokit } = require('@actions/github')
 const exec = require('@actions/exec')
 const axios = require('axios').default
 
+const RESULTS_PER_REQUEST = 20
+
 const sonarQubeConfig = (repo) =>  ({
 	projectKey: getInput('projectKey') ? getInput('projectKey') : `${repo.owner}-${repo.repo}`,
 	projectName: getInput('projectName') ? getInput('projectName') : `${repo.owner}-${repo.repo}`,
@@ -45,6 +47,8 @@ async function run () {
 	await exec.exec(scannerCommand)
 
 	await new Promise(r => setTimeout(r, 5000))
+
+	const issues = await projectIssues(config, RESULTS_PER_REQUEST, 1)
 }
 
 run()
