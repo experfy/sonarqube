@@ -39,6 +39,28 @@ const projectIssues = async (sonarqubeConfig, pageSize, page) => {
   }
 }
 
+const createGithubCheck = async (octokit, repo) => {
+  const pullRequest = context.payload.pull_request
+
+  try {
+    await octokit.checks.create({
+      ...repo,
+      name: 'SonarQube Review',
+      head_sha: pullRequest,
+      status: 'completed',
+      conclusion: 'neutral',
+      details_url: '',
+      output: {
+        title: 'SonarQube',
+        summary: '',
+        [],
+      }
+    })
+  } catch(error) {
+    throw new Error(error)
+  }
+}
+
 async function run () {
 	const repo = context.repo
 	const config = sonarQubeConfig(repo)
