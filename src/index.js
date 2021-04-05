@@ -11,8 +11,8 @@ const sonarQubeConfig = (repo) =>  ({
 	token: getInput('token')
 })
 
-const sonarQubeCommand = (sonarqube) =>
-	`sonar-scanner -Dsonar.projectKey=${sonarqube.projectKey} -Dsonar.projectName=${sonarqube.projectName} -Dsonar.sources=. -Dsonar.projectBaseDir=${sonarqube.projectBaseDir} -Dsonar.login=${sonarqube.token} -Dsonar.host.url=${sonarqube.host}`
+const sonarQubeCommand = (sonarqubeConfig) =>
+	`sonar-scanner -Dsonar.projectKey=${sonarqubeConfig.projectKey} -Dsonar.projectName=${sonarqubeConfig.projectName} -Dsonar.sources=. -Dsonar.projectBaseDir=${sonarqubeConfig.projectBaseDir} -Dsonar.login=${sonarqubeConfig.token} -Dsonar.host.url=${sonarqubeConfig.host}`
 
 const projectIssues = async (sonarqubeConfig, pageSize, page) => {
   const tokenBase64 = Buffer.from(sonarqubeConfig.token + ':').toString('base64')
