@@ -41,12 +41,13 @@ const projectIssues = async (sonarqubeConfig, pageSize, page) => {
 
 const createGithubCheck = async (octokit, repo) => {
   const pullRequest = context.payload.pull_request
+	const ref = pullRequest ? pullRequest.head.sha : context.sha
 
   try {
     await octokit.checks.create({
       ...repo,
       name: 'SonarQube Review',
-      head_sha: pullRequest,
+      head_sha: ref,
       status: 'completed',
       conclusion: 'neutral',
       details_url: '',
