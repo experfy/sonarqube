@@ -71,6 +71,10 @@ async function run () {
 	await new Promise(r => setTimeout(r, 5000))
 
 	const issues = await projectIssues(config, RESULTS_PER_REQUEST, 1)
+
+	const octokit = getOctokit(getInput('githubToken'))
+
+	await createGithubCheck(octokit, repo)
 }
 
 run()
