@@ -39,6 +39,20 @@ const projectIssues = async (sonarqubeConfig, pageSize, page) => {
   }
 }
 
+const createGithubComment = async (octokit, repo, message) => {
+	const pullRequestNumber = context.payload.pull_request.number
+
+	try {
+    await octokit.issues.createComment({
+       ...repo,
+       issue_number: pullRequestNumber,
+       body: message
+    });
+  } catch(error) {
+    throw new Error(error)
+  }
+}
+
 const componentToPath = (component) => {
   if (!component.includes(':')) return component
 
