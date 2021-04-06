@@ -1,5 +1,5 @@
-name: 'Experfy review action'
-description: 'Review code using sonarqube'
+name: 'SonnarQube Code Analysis'
+description: 'Review code using SonarQube'
 inputs:
   host:
     description: "SonarQube Server URL"
@@ -26,5 +26,5 @@ runs:
   using: 'docker'
   image: 'Dockerfile'
 branding:
-  icon: 'git-pull-request'
-  color: 'green'
+  icon: 'radio'
+  color: 'gray-dark'
