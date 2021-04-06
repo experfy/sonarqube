@@ -75,7 +75,7 @@ const issuesToAnnotations = (issues) => {
   })
 }
 
-const createGithubCheck = async (octokit, repo) => {
+const createGithubCheck = async (octokit, repo, annotations) => {
   const pullRequest = context.payload.pull_request
 	const ref = pullRequest ? pullRequest.head.sha : context.sha
 
@@ -90,7 +90,7 @@ const createGithubCheck = async (octokit, repo) => {
       output: {
         title: 'SonarQube',
         summary: '',
-        [],
+        annotations,
       }
     })
   } catch(error) {
@@ -108,10 +108,11 @@ async function run () {
 	await new Promise(r => setTimeout(r, 5000))
 
 	const issues = await projectIssues(config, RESULTS_PER_REQUEST, 1)
+	const annotations = issuesToAnnotations(issues)
 
 	const octokit = getOctokit(getInput('githubToken'))
 
-	await createGithubCheck(octokit, repo)
+	await createGithubCheck(octokit, repo, annotations)
 }
 
 run()
