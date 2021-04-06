@@ -39,6 +39,42 @@ const projectIssues = async (sonarqubeConfig, pageSize, page) => {
   }
 }
 
+const componentToPath = (component) => {
+  if (!component.includes(':')) return component
+
+  const [, path] = component.split(':')
+  return path
+}
+
+const getAnnotationLevel = (severity) => {
+  switch(severity) {
+    case 'BLOCKER':
+      return 'failure'
+    case 'CRITICAL':
+      return 'failure'
+    case 'MAJOR':
+      return 'failure'
+    case 'MINOR':
+      return 'warning'
+    case 'INFO':
+      return 'notice'
+    default:
+      return 'notice'
+  }
+}
+
+const issuesToAnnotations = (issues) => {
+  return issues.map(issue => {
+    return {
+      path: componentToPath(issue.component),
+      start_line: issue.textRange ? issue.textRange.startLine : 1,
+      end_line: issue.textRange ? issue.textRange.endLine : 1,
+      annotation_level: getAnnotationLevel(issue.severity),
+      message: issue.message
+    }
+  })
+}
+
 const createGithubCheck = async (octokit, repo) => {
   const pullRequest = context.payload.pull_request
 	const ref = pullRequest ? pullRequest.head.sha : context.sha
