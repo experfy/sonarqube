@@ -95,7 +95,9 @@ const createGithubCheck = async (octokit, repo, annotations) => {
     })
   } catch(error) {
     throw new Error(error)
-  }
+  } finally {
+    if (annotations && annotations.length) info.setFailed('High severity issues found. Please correct them.')
+	}
 }
 
 async function run () {
