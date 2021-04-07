@@ -76,13 +76,15 @@ const issuesToAnnotations = (issues) => {
   })
 }
 
-const createGithubCheck = async (octokit, repo, annotations) => {
+const createGithubCheck = async (octokit, repo) => {
 	info('Creating check')
   const pullRequest = context.payload.pull_request
 	const ref = pullRequest ? pullRequest.head.sha : context.sha
 
   try {
-    await octokit.checks.create({
+    const {
+      data: { id: checkRunId },
+    } = await octokit.checks.create({
       ...repo,
       name: 'SonarQube Automated Review',
       head_sha: ref,
@@ -92,9 +94,11 @@ const createGithubCheck = async (octokit, repo, annotations) => {
       output: {
         title: 'SonarQube',
         summary: '',
-        annotations,
-      }
+        [],
+      },
     })
+
+		return checkRunId
   } catch(error) {
     throw new Error(error)
   }
@@ -114,7 +118,7 @@ async function run () {
 
 	const octokit = getOctokit(getInput('githubToken'))
 
-	await createGithubCheck(octokit, repo, annotations)
+	await createGithubCheck(octokit, repo)
 }
 
 run()
