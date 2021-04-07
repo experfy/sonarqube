@@ -21,7 +21,7 @@ const projectIssues = async (sonarqubeConfig, pageSize, page) => {
   const tokenBase64 = Buffer.from(sonarqubeConfig.token + ':').toString('base64')
 
   try {
-    const response = await axios.get(`${sonarqubeConfig.host}/api/issues/search?componentKeys=${sonarqubeConfig.projectKey}&sinceLeakPeriod=true&statuses=OPEN&ps=${pageSize}&p=${page}`,
+    const response = await axios.get(`${sonarqubeConfig.host}/api/issues/search?componentKeys=${sonarqubeConfig.projectKey}&statuses=OPEN&ps=${pageSize}&p=${page}`,
       {
         headers: {
           Authorization: `Basic ${tokenBase64}`
@@ -96,9 +96,7 @@ const createGithubCheck = async (octokit, repo, annotations) => {
     })
   } catch(error) {
     throw new Error(error)
-  } finally {
-    if (annotations && annotations.length) core.setFailed('High severity issues found. Please correct them.')
-	}
+  }
 }
 
 async function run () {
