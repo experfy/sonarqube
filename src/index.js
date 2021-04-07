@@ -4,7 +4,7 @@ const core = require('@actions/core')
 const exec = require('@actions/exec')
 const axios = require('axios').default
 
-const RESULTS_PER_REQUEST = 20
+const RESULTS_PER_REQUEST = 50
 
 const sonarQubeConfig = (repo) =>  ({
 	projectKey: getInput('projectKey') ? getInput('projectKey') : `${repo.owner}-${repo.repo}`,
