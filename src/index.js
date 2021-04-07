@@ -103,6 +103,26 @@ const createGithubCheck = async (octokit, repo, detailsURL) => {
   }
 }
 
+const updateGithubCheck = async (octokit, repo, checkRunId, annotations) => {
+  info('Updating check')
+  try {
+    await octokit.checks.update({
+      ...repo,
+      check_run_id: checkRunId,
+      status: 'completed',
+      conclusion: 'neutral',
+      output: {
+        title: 'SonarQube',
+        summary: 'Updated Analysis summary.',
+        annotations,
+      },
+    })
+  } catch (error) {
+    throw new Error(error)
+  }
+}
+
+
 async function run () {
 	const repo = context.repo
 	const config = sonarQubeConfig(repo)
@@ -120,6 +140,17 @@ async function run () {
 	const detailsURL = `${config.host}/dashboard?id=${config.projectKey}`
 
 	const checkRunId = await createGithubCheck(octokit, repo, detailsURL)
+
+  issues.map(async (batch) => {
+    const annotations = issuesToAnnotations(batch)
+
+    await updateGithubCheck(
+      octokit,
+      repo,
+      checkRunId,
+      annotations
+    )
+  })
 }
 
 run()
