@@ -94,7 +94,6 @@ const createGithubCheck = async (octokit, repo) => {
       output: {
         title: 'SonarQube',
         summary: '',
-        [],
       },
     })
 
