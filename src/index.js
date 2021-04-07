@@ -77,13 +77,14 @@ const issuesToAnnotations = (issues) => {
 }
 
 const createGithubCheck = async (octokit, repo, annotations) => {
+	info('Creating check')
   const pullRequest = context.payload.pull_request
 	const ref = pullRequest ? pullRequest.head.sha : context.sha
 
   try {
     await octokit.checks.create({
       ...repo,
-      name: 'SonarQube Review',
+      name: 'SonarQube Automated Review',
       head_sha: ref,
       status: 'completed',
       conclusion: 'neutral',
