@@ -1,4 +1,4 @@
-const { getInput, info } = require('@actions/core')
+const { core, getInput, info} = require('@actions/core')
 const { context, getOctokit } = require('@actions/github')
 const exec = require('@actions/exec')
 const axios = require('axios').default
@@ -96,7 +96,7 @@ const createGithubCheck = async (octokit, repo, annotations) => {
   } catch(error) {
     throw new Error(error)
   } finally {
-    if (annotations && annotations.length) info.setFailed('High severity issues found. Please correct them.')
+    if (annotations && annotations.length) core.setFailed('High severity issues found. Please correct them.')
 	}
 }
 
