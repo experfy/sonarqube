@@ -17,7 +17,7 @@ const sonarQubeConfig = (repo) =>  ({
 const sonarQubeCommand = (sonarqubeConfig) =>
 	`sonar-scanner -Dsonar.projectKey=${sonarqubeConfig.projectKey} -Dsonar.projectName=${sonarqubeConfig.projectName} -Dsonar.sources=. -Dsonar.projectBaseDir=${sonarqubeConfig.projectBaseDir} -Dsonar.login=${sonarqubeConfig.token} -Dsonar.host.url=${sonarqubeConfig.host}`
 
-const projectIssues = async (sonarqubeConfig, pageSize, page) => {
+const projectIssues = async (sonarqubeConfig, pageSize, page, result = []) => {
   const tokenBase64 = Buffer.from(sonarqubeConfig.token + ':').toString('base64')
 
   try {
@@ -28,13 +28,21 @@ const projectIssues = async (sonarqubeConfig, pageSize, page) => {
         }
       }
     )
-
-    const issues = response.data.issues
-    if (pageSize * page >= response.data.paging.total) {
-      return issues
+    if (response.status !== 200 || !response.data) {
+      return result
     }
 
-    return issues.concat(await projectIssues(sonarqubeConfig, pageSize, page + 1))
+    const {
+      data: { issues },
+    } = response
+
+    result.push(issues)
+
+    if (pageSize * page >= response.data.paging.total) {
+      return result
+    }
+
+    return await projectIssues(sonarqubeConfig, pageSize, page + 1, result)
   } catch(err) {
     throw new Error('Error getting project issues from SonarQube. Please make sure you provided the host and token inputs.')
   }
