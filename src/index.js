@@ -127,6 +127,8 @@ const updateGithubCheck = async (octokit, repo, checkRunId, annotations) => {
     })
   } catch (error) {
     throw new Error(error)
+  } finally {
+    if (annotations && annotations.length) core.setFailed('High severity issues found. Please correct them.')
   }
 }
 
